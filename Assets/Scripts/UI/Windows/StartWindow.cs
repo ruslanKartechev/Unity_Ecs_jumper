@@ -1,6 +1,8 @@
 ﻿using System;
+using Ecs;
+using Ecs.Components;
+using Ecs.Systems;
 using Game.Sound;
-using Game.Sound.Data;
 using Services.Level;
 using UI.Views;
 using Zenject;
@@ -48,12 +50,13 @@ namespace UI.Windows
             if (_clicked)
                 return;
             _clicked = true;
-            _soundManager.PlaySound(new SoundPlayArgs()
-            {
-                name = SoundNames.UIClick,
-                loop =  false,
-                once = true
-            });
+            Pool.World.AddComponentToEntity<StartLevelComponent>(Pool.PlayerEntity);
+            // _soundManager.PlaySound(new SoundPlayArgs()
+            // {
+            //     name = SoundNames.UIClick,
+            //     loop =  false,
+            //     once = true
+            // });
         }
 
         private void OnSoundButton()
@@ -61,12 +64,12 @@ namespace UI.Windows
             var state = _view.SoundButton.State;
             state = !state;
             _view.SoundButton.State = state;
-            var sound = _soundManager.PlaySound(new SoundPlayArgs()
-            {
-                name = SoundNames.UIClick,
-                loop =  false,
-                once = true
-            });
+            // var sound = _soundManager.PlaySound(new SoundPlayArgs()
+            // {
+            //     name = SoundNames.UIClick,
+            //     loop =  false,
+            //     once = true
+            // });
         }
     }
 }

@@ -8,18 +8,22 @@ namespace Ecs.Systems
     public class SetPlayerMoveDestinationSystem : IEcsRunSystem, IEcsInitSystem
     {
         private EcsFilter _filter;
+        private EcsWorld _world;
         private EcsPool<MoveInputComponent> _moveInputPool;
+        private EcsPool<CellPositionComponent> _cellPositionsPool;
 
         public void Init(IEcsSystems systems)
         {
-            _filter = systems.GetWorld().Filter<PlayerComponent>().Inc<CellPositionComponent>().End();
-            _moveInputPool = systems.GetWorld().GetPool<MoveInputComponent>();
+            _world = systems.GetWorld();
+            _filter = _world.Filter<PlayerComponent>().Inc<CellPositionComponent>().End();
+            _moveInputPool = _world.GetPool<MoveInputComponent>();
+            _cellPositionsPool = _world.GetPool<CellPositionComponent>();
+
         }
         
         public void Run(IEcsSystems systems)
         {
-            var canMove = Pool.World.HasComponent<CanMoveComponent>(Pool.PlayerEntity);
-            if (canMove == false)
+            if (Pool.World.HasComponent<CanMoveComponent>(Pool.PlayerEntity) == false)
                 return;
             
             ref var input = ref _moveInputPool.Get(Pool.PlayerEntity);
@@ -28,12 +32,11 @@ namespace Ecs.Systems
             
             foreach (var entity in _filter)
             {
-                var world = systems.GetWorld();
-                if (world.HasComponent<IsMovingComponent>(entity))
+                if (_world.HasComponent<IsMovingComponent>(entity))
                     continue;
-                
-                ref var cellPosComponent = ref world.GetComponent<CellPositionComponent>(entity);
-                ref var map = ref world.GetComponent<MapComponent>(Pool.MapEntity);
+
+                ref var cellPosComponent = ref _cellPositionsPool.Get(entity);
+                ref var map = ref _world.GetComponent<MapComponent>(Pool.MapEntity);
                 var cell_x = cellPosComponent.x;
                 var cell_y = cellPosComponent.y;
                 cell_x += input.Value.x;
@@ -43,30 +46,50 @@ namespace Ecs.Systems
                     validMove = false;
                 if (cell_y >= map.Height || cell_y < 0)
                     validMove = false;
-
+                _world.AddComponentToNew<CheckPotentialMoveComponent>();
                 if (validMove)
                 {
-                    var playerPos = world.GetComponent<PositionComponent>(entity).Value;
-                    var maxHeight = world.GetComponent<MaxJumpHeightComponent>(entity).Value;
-                    var position = MapHelpers.GetPositionAtCell(cell_x, cell_y);
-                    var diff = position.y - playerPos.y;
+                    var playerPos = _world.GetComponent<PositionComponent>(entity).Value;
+                    var maxHeight = _world.GetComponent<MaxJumpHeightComponent>(entity).Value;
+                    var endPos = MapHelpers.GetPositionAtCell(cell_x, cell_y);
+                    var diff = endPos.y - playerPos.y;
                     if (diff > maxHeight)
                     {
-                        SetInPlaceJump(entity, world);
+                        SetInPlaceJump(entity, _world);
                         return;
                     }
-                    ref var moveComp = ref world.AddComponentToEntity<LerpMoveComponent>(entity);
+                    
+                    #region StartMoving
+                    ref var moveComp = ref _world.AddComponentToEntity<LerpMoveComponent>(entity);
                     moveComp.StartPosition = playerPos;
-                    moveComp.EndPosition = position;
+                    moveComp.EndPosition = endPos;
                     cellPosComponent.x = cell_x;
                     cellPosComponent.y = cell_y;
-                    world.AddComponentToEntity<IsMovingComponent>(entity);
-                    world.AddComponentToEntity<JumpStartedComponent>(entity);
-
+                    _world.AddComponentToEntity<IsMovingComponent>(entity);
+                    _world.AddComponentToEntity<JumpStartedComponent>(entity);
+                    #endregion
+                    
+                    #region AddJumpCount
+                    ref var moveCountComp = ref _world.GetComponent<JumpCountComponent>(entity);
+                    moveCountComp.Value++;
+                    ReactDataPool.MoveCount.Value = moveCountComp.Value;
+                    #endregion
+                    
+                    #region BlockComponentTransparency
+                    var blocks = _world.Filter<BlockComponent>().End();
+                    foreach (var block in blocks)
+                    {
+                        ref var checkTransparency  = ref _world.AddComponentToEntity<CheckBlockTransparencyComponent>(block);
+                        checkTransparency.xCellPos = cell_x;
+                        checkTransparency.yCellPos = cell_y;
+                        checkTransparency.Height = endPos.y;            
+                    }
+                    #endregion
+            
                 }
                 else
                 {
-                    SetInPlaceJump(entity, world);
+                    SetInPlaceJump(entity, _world);
                 }
             }
         }

@@ -1,7 +1,5 @@
-﻿using Ecs;
-using Ecs.Systems;
+﻿using Ecs.Systems;
 using Helpers;
-using Installers;
 using UnityEngine;
 using Zenject;
 
@@ -12,13 +10,13 @@ namespace Game
     {
         [SerializeField] private SceneContext _sceneContext;
         [SerializeField] private SceneInitializer _sceneInitializer;
-        // [SerializeField] private EcsInstaller _ecsInstaller;
 
         [Inject] private SystemRunner _systemRunner;
         [Inject] private DiContainer _diContainer;
         
         private void Awake()
         {
+            Input.simulateMouseWithTouches = true;
             InitLogs();
             _sceneContext.Run();
             _sceneInitializer.Run();

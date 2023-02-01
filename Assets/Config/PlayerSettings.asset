@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: PlayerSettings
   m_EditorClassIdentifier: 
   _moveSpeed: 6
-  _upOffset: 1
-  _upOffsetLerpValue: 0.86
+  _upOffset: 1.5
+  _upOffsetLerpValue: 0.75
   _maxJumpHeight: 1

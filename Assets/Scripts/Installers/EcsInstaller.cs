@@ -25,23 +25,38 @@ namespace Installers
             
             // init
             MakeInitSystem<InitGameSystem>(initSystems);
+            MakeInitSystem<ControlSpawnTimeSystem>(initSystems);
+
             // fixed update
             // lateUpdate
             // update
             MakeUpdateAndInitSystem<InputCheckSystem>(updateSystems, initSystems);
             MakeUpdateAndInitSystem<LoadLevelSystem>(updateSystems, initSystems);
-            MakeUpdateAndInitSystem<FillCellSystem>(updateSystems, initSystems);
-            MakeUpdateAndInitSystem<SpawnPlayerSystem>(updateSystems, initSystems);
-            MakeUpdateAndInitSystem<TransformMoveSystem>(updateSystems, initSystems);
             MakeUpdateAndInitSystem<SetPlayerMoveDestinationSystem>(updateSystems, initSystems);
-            MakeUpdateAndInitSystem<LerpJumpMoveSystem>(updateSystems, initSystems);
+            MakeUpdateAndInitSystem<FillCellSystem>(updateSystems, initSystems);
+            
+            MakeUpdateAndInitSystem<ScaleOnJumpSystem>(updateSystems, initSystems);
+            MakeUpdateAndInitSystem<MoveLerpJumpSystem>(updateSystems, initSystems);
+            
             MakeUpdateAndInitSystem<SpawnBlockCountdownSystem>(updateSystems, initSystems);
             MakeUpdateAndInitSystem<StartLevelSystem>(updateSystems, initSystems);
             MakeUpdateAndInitSystem<SpawnRandomBlockSystem>(updateSystems, initSystems);
             MakeUpdateAndInitSystem<SetCameraLookPositionSystem>(updateSystems, initSystems);
             MakeUpdateAndInitSystem<MoveCameraSystem>(updateSystems, initSystems);
             MakeUpdateAndInitSystem<DropMoveSystem>(updateSystems, initSystems);
-            MakeUpdateAndInitSystem<JumpPoofSystem>(updateSystems, initSystems);
+            MakeUpdateAndInitSystem<CheckTransparentBlocksSystem>(updateSystems, initSystems);
+            MakeUpdateAndInitSystem<SpawnPlayerSystem>(updateSystems, initSystems);
+            MakeUpdateAndInitSystem<CheckPotentialMoveSystem>(updateSystems, initSystems);
+            MakeUpdateAndInitSystem<FailLevelSystem>(updateSystems, initSystems);
+            MakeUpdateAndInitSystem<AddJumpHeightBonusSystem>(updateSystems, initSystems);
+            MakeUpdateAndInitSystem<AddJumpToTopBonusSystem>(updateSystems, initSystems);
+
+            // view
+            MakeUpdateAndInitSystem<JumpPoofVS>(updateSystems, initSystems);
+            MakeUpdateAndInitSystem<TransformMoveVS>(updateSystems, initSystems);
+            MakeUpdateAndInitSystem<UpdateMaterialVS>(updateSystems, initSystems);
+            MakeUpdateAndInitSystem<ScaleVS>(updateSystems, initSystems);
+            MakeUpdateAndInitSystem<HighlightBonusesSystem>(updateSystems, initSystems);
 
             runner.AddInit(initSystems);
             runner.AddUpdate(updateSystems);

@@ -4,12 +4,14 @@ using Game.Level.Impl;
 using Leopotam.EcsLite;
 using Services.Instantiate;
 using Services.Parent;
+using TMPro;
 using Zenject;
 
 namespace Ecs.Systems
 {
     public class LoadLevelSystem : IEcsRunSystem, IEcsInitSystem
     {
+        private EcsWorld _world;
         private EcsFilter _filter;
         private EcsPool<LoadLevelComponent> _pool;
         
@@ -19,6 +21,8 @@ namespace Ecs.Systems
 
         public void Init(IEcsSystems systems)
         {
+            _world = systems.GetWorld();
+
             _filter = systems.GetWorld().Filter<LoadLevelComponent>().End();
             _pool = systems.GetWorld().GetPool<LoadLevelComponent>();   
         }
@@ -29,30 +33,26 @@ namespace Ecs.Systems
             {
                 ref var component = ref _pool.Get(entity);
                 var prefab = _levelRepository.GetLevel(component.Index);
-                var instance = _instantiateService.Spawn<LevelView>(prefab.gameObject);
-                _parentService.DefaultParent = instance.transform;
+                var viewInstance = _instantiateService.Spawn<LevelView>(prefab.gameObject);
+                _parentService.DefaultParent = viewInstance.transform;
                 
                 _pool.Del(entity);
-                var world = systems.GetWorld();
                 
-                ref var cellTops = ref world.GetComponent<CellTopsComponent>(Pool.MapEntity);
-                ref var map = ref world.GetComponent<MapComponent>(Pool.MapEntity);
-                map.Width = instance.gridSize;
-                map.Height = instance.gridSize;
+                ref var cellTops = ref _world.GetComponent<CellTopsComponent>(Pool.MapEntity);
+                ref var map = ref _world.GetComponent<MapComponent>(Pool.MapEntity);
+                map.Width = viewInstance.gridSize;
+                map.Height = viewInstance.gridSize;
 
-                ref var spawnDelay = ref world.GetComponent<BlockSpawnDelayComponent>(Pool.LevelEntity);
-                spawnDelay.Value = instance.spawnDelay;
-                
-                cellTops.Positions = new CellTopsData[instance.gridSize, instance.gridSize];
+                cellTops.Positions = new CellTopsData[viewInstance.gridSize, viewInstance.gridSize];
                 var index = 0;
-                for (var i = 0; i < instance.gridSize; i++)
+                for (var i = 0; i < viewInstance.gridSize; i++)
                 {
-                    for (var k = 0; k < instance.gridSize; k++)
+                    for (var k = 0; k < viewInstance.gridSize; k++)
                     {
                         ref var data = ref cellTops.Positions[i, k];
                         data = new CellTopsData();
-                        data.Position = instance._spawnPoints[index].position;
-                        ref var command = ref world.AddComponentToNew<FillCellComponent>();
+                        data.Position = viewInstance._spawnPoints[index].position;
+                        ref var command = ref _world.AddComponentToNew<FillCellComponent>();
                         command.x = i;
                         command.y = k;
                         command.Type = BlockType.Ground;
@@ -61,11 +61,29 @@ namespace Ecs.Systems
                     }
                 }
 
-                world.AddComponentToNew<SpawnPlayerComponent>();
+                ref var spawnDelay = ref _world.GetComponent<BlockSpawnDelayComponent>(Pool.PlayerEntity);
+                spawnDelay.Value = viewInstance.spawnDelay;
+                spawnDelay.Tier = 0;
                 
-;            }
+                ref var blocksCount = ref _world.GetComponent<BlocksCountComponent>(Pool.PlayerEntity);
+                blocksCount.Value = 0;
+                ReactDataPool.BlocksCount.Value = 0;
+            
+                ref var blockSpawnDelay = ref _world.GetComponent<BlockSpawnDataComponent>(Pool.PlayerEntity);
+                blockSpawnDelay.Data = viewInstance.spawnDelayData;
+                
+                SetBonuses();
+                _world.AddComponentToNew<SpawnPlayerComponent>();
+            }
         }
-        
+
+        private void SetBonuses()
+        {
+            ref var jumpHeightCount = ref _world.GetComponent<JumpHeightBonusCountComponent>(Pool.PlayerEntity);
+            jumpHeightCount.Value = 5;
+            ref var jumpToTopCount = ref _world.GetComponent<JumpToTopBonusCountComponent>(Pool.PlayerEntity);
+            jumpToTopCount.Value = 4;   
+        }
         
         
     }

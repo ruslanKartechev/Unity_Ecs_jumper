@@ -1,4 +1,5 @@
 ﻿using System;
+using Ecs;
 using UI.Views;
 
 namespace UI.Windows
@@ -11,6 +12,8 @@ namespace UI.Windows
         public ProgressWindow(ProgressWindowView view)
         {
             _view = view;
+            _view.UpdateJumpsCount(0);
+            ReactDataPool.MoveCount.SubOnChange((value) => _view.UpdateJumpsCount(value) );
         }
         
         public void Open(bool animated = true, Action onDone = null)
@@ -33,13 +36,6 @@ namespace UI.Windows
             }
         }
         
-        public void OnDefeatedEnemiesCountChange(int value)
-        {
-            SetEnemiesCount();
-        }
-
-        private void SetEnemiesCount()
-        {
-        }
+        
     }
 }

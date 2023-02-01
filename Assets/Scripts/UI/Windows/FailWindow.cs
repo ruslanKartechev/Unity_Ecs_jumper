@@ -29,7 +29,7 @@ namespace UI.Windows
             {
                 _view.IsOpen = true;
             }
-            _view.HeaderText = $"LEVEL: {_levelService.TotalLevelsPassed + 1} FAILED";
+            _view.HeaderText = $"LEVEL {_levelService.TotalLevelsPassed + 1} FAILED";
         }
 
         public void Close(bool animated = true, Action onDone = null)

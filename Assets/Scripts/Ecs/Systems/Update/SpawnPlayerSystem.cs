@@ -42,7 +42,7 @@ namespace Ecs.Systems
                 ref var speedComponent = ref world.GetComponent<MoveSpeedComponent>(entity);
                 speedComponent.Value = settings.MoveSpeed;
                 
-                ref var viewComp = ref world.AddComponentToEntity<TransformViewComponent>(entity);
+                ref var viewComp = ref world.AddComponentToEntity<TransformVC>(entity);
                 viewComp.Body = instance.transform;
                 
                 ref var vertOffset = ref world.GetComponent<VerticalOffsetComponent>(entity);
@@ -53,10 +53,9 @@ namespace Ecs.Systems
                 maxHeight.Value = settings.MaxJumpHeight;
                 _pool.Del(command);
 
-                ref var particlesView = ref world.AddComponentToEntity<JumpParticlesViewComponent>(entity);
+                ref var particlesView = ref world.AddComponentToEntity<JumpParticlesVC>(entity);
                 particlesView.PooParticles = instance.poofParticles;
                 
-                Dbg.LogGreen($"SPAWN PLAYER");
                 ref var cameraLookPosition = ref world.GetComponent<LookAtPosition>(Pool.CameraEntity);
                 cameraLookPosition.Value = position;
                 

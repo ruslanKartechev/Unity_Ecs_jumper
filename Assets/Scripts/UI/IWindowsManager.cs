@@ -1,5 +1,4 @@
-﻿using UI.Windows;
-
+﻿
 namespace UI
 {
     public interface IWindowsManager
@@ -9,5 +8,8 @@ namespace UI
         void ShowProcess();
         void ShowWin();
         void ShowFail();
+        void ShowBonusWindow();
+        void CloseBonusWindow();
+        
     }
 }

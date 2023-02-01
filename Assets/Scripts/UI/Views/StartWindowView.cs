@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using Helpers;
 using UI.Elements;
 using UI.Elements.Impl;
 using VFX.Animations.Impl;
@@ -13,7 +14,6 @@ namespace UI.Views
         [SerializeField] private TextMeshProUGUI _levelText;
         [SerializeField] private SoundButton _soundElement; 
         [SerializeField] private Button _startBtn;
-        [SerializeField] private Button _soundBtn;
         [SerializeField] private Animator _animator;
         [SerializeField] private PulsingAnimator _pulsingAnimator;
 
@@ -34,16 +34,18 @@ namespace UI.Views
         {
             IsOpen = true;
             _onShown = onShown;
-            _animator.enabled = true;
-            _animator.Play("FadeIn");
+            OnShowAnimEvent();  
+            // _animator.enabled = true;
+            // _animator.Play("FadeIn");
         }
 
         public void CloseView(Action onClosed)
         {
-            _animator.enabled = true;
             _pulsingAnimator.StopScaling();
-            _animator.Play("FadeOut");
+            // _animator.enabled = true;
+            // _animator.Play("FadeOut");
             _onClosed = onClosed;
+            OnCloseAnimEvent();
         }
 
         public void InitButtons(Action startAction, Action soundAction)
@@ -51,7 +53,7 @@ namespace UI.Views
             _startAction = startAction;
             _soundAction = soundAction;
             _startBtn.onClick.AddListener(() => { _startAction?.Invoke();});
-            _soundBtn.onClick.AddListener(() => { _soundAction?.Invoke();});
+            // _soundBtn.onClick.AddListener(() => { _soundAction?.Invoke();});
         }
 
         public void OnCloseAnimEvent()
@@ -63,7 +65,7 @@ namespace UI.Views
         
         public void OnShowAnimEvent()
         {
-            _animator.enabled = false;
+            // _animator.enabled = false;
             _pulsingAnimator.StartScaling();
             _onShown?.Invoke();
             _onShown = null;

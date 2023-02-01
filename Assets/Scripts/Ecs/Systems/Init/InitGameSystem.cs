@@ -1,6 +1,7 @@
 ﻿using Ecs.Components;
 using Leopotam.EcsLite;
 using Services.Level;
+using UI;
 using Zenject;
 
 namespace Ecs.Systems.Init
@@ -8,6 +9,7 @@ namespace Ecs.Systems.Init
     public class InitGameSystem : IEcsInitSystem
     {
         [Inject] private ILevelService _levelService;
+        [Inject] private IWindowsManager _windowsManager;
         
         public void Init(IEcsSystems systems)
         {
@@ -17,7 +19,9 @@ namespace Ecs.Systems.Init
             EntityMaker.MakeLevelEntity(world);
             ref var comp = ref world.AddComponentToNew<LoadLevelComponent>();
             comp.Index = _levelService.CurrentLevelIndex;
-            world.AddComponentToEntity<StartLevelComponent>(Pool.PlayerEntity);
+            _windowsManager.CloseAll();
+            _windowsManager.ShowStart();
+            // world.AddComponentToEntity<StartLevelComponent>(Pool.PlayerEntity);
         }
         
     }

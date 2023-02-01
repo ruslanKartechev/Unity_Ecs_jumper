@@ -14,9 +14,8 @@ namespace Game
         
         public void Run()
         {
-            Dbg.LogRed($"SCENE INIT RUN");
             var entity = EntityMaker.MakeCameraEntity(Pool.World);
-            ref var viewComponent = ref Pool.World.AddComponentToEntity<TransformViewComponent>(entity);
+            ref var viewComponent = ref Pool.World.AddComponentToEntity<TransformVC>(entity);
             viewComponent.Body = _cameraView.transform;
             
             ref var offsetComp = ref Pool.World.GetComponent<OffsetComponent>(entity);

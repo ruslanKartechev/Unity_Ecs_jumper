@@ -1,7 +1,6 @@
 ﻿using Data;
 using Data.Prefabs;
 using Ecs.Components;
-using Ecs.Components.View;
 using Leopotam.EcsLite;
 using Services.Instantiate;
 using Services.Parent;
@@ -13,6 +12,7 @@ namespace Ecs.Systems
 {
     public class FillCellSystem : IEcsInitSystem, IEcsRunSystem
     {
+        private EcsWorld _world;
         private EcsFilter _filter;
         private EcsPool<FillCellComponent> _commandPool;
         private EcsPool<CellTopsComponent> _cellTopsFilter;
@@ -25,9 +25,10 @@ namespace Ecs.Systems
 
         public void Init(IEcsSystems systems)
         {
-            _filter = systems.GetWorld().Filter<FillCellComponent>().End();
-            _commandPool = systems.GetWorld().GetPool<FillCellComponent>();
-            _cellTopsFilter = systems.GetWorld().GetPool<CellTopsComponent>();
+            _world = systems.GetWorld();
+            _filter = _world.Filter<FillCellComponent>().End();
+            _commandPool = _world.GetPool<FillCellComponent>();
+            _cellTopsFilter = _world.GetPool<CellTopsComponent>();
         }
 
         public void Run(IEcsSystems systems)
@@ -55,8 +56,8 @@ namespace Ecs.Systems
             var prefab = _prefabsRepository.GetPrefab<CellBlockView>(PrefabNames.GroundBlock);
             ref var data = ref tops.Positions[command.x, command.y];
             var spawnPosition = data.Position;
-            var instance = _instantiateService.Spawn<CellBlockView>(prefab.gameObject, _parentService.DefaultParent, spawnPosition);
-            data.Position.y += instance.Height;   
+            var viewInstance = _instantiateService.Spawn<CellBlockView>(prefab.gameObject, _parentService.DefaultParent, spawnPosition);
+            data.Position.y += viewInstance.Height;   
         }
         
         public void SpawnDefaultBlock(int entity, EcsWorld world)
@@ -66,17 +67,36 @@ namespace Ecs.Systems
             var prefab = _prefabsRepository.GetPrefab<CellBlockView>(PrefabNames.DefaultBlock);
             ref var data = ref tops.Positions[command.x, command.y];
             var spawnPosition = data.Position;
-            var instance = _instantiateService.Spawn<CellBlockView>(prefab.gameObject, _parentService.DefaultParent, spawnPosition);
-            data.Position.y += instance.Height;
+            var viewInstance = _instantiateService.Spawn<CellBlockView>(prefab.gameObject, _parentService.DefaultParent, spawnPosition);
+            data.Position.y += viewInstance.Height;
 
-            var blockEntity = EntityMaker.MakeBlockEntity(world, spawnPosition, instance.transform);
+            var blockEntity = EntityMaker.MakeBlockEntity(world, 
+                spawnPosition, 
+                viewInstance, 
+                new Vector2Int(command.x, command.y));
             
             ref var dropMoveComponent = ref world.AddComponentToEntity<DropMoveComponent>(blockEntity);
             dropMoveComponent.EndPosition = spawnPosition;
             dropMoveComponent.StartPosition = spawnPosition + Vector3.up * _spawnUpOffset;
             dropMoveComponent.Time = _dropTime;
+            IncreaseCount();            
+
+            if (_world.HasComponent<CheckBlockTransparencyComponent>(blockEntity))
+            {
+                ref var checkTransparency = ref world.AddComponentToEntity<CheckBlockTransparencyComponent>(blockEntity);
+                checkTransparency.Height = world.GetComponent<PositionComponent>(Pool.PlayerEntity).Value.y;
+                var playerCellPos = world.GetComponent<CellPositionComponent>(Pool.PlayerEntity);
+                checkTransparency.xCellPos = playerCellPos.x;
+                checkTransparency.yCellPos = playerCellPos.y;
+            }
+            
         }
-        
-        
+
+        private void IncreaseCount()
+        {
+            ref var blocksCount = ref _world.GetComponent<BlocksCountComponent>(Pool.PlayerEntity);
+            blocksCount.Value++;
+            ReactDataPool.BlocksCount.Value++;
+        }
     }
 }

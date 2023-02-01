@@ -35,18 +35,18 @@ namespace UI.Views
         
         public void ShowView(Action onShown)
         {
-            _animator.enabled = true;
+            // _animator.enabled = true;
             IsOpen = true;
             _onShown = onShown;
-            _animator.Play("FadeIn");
+            // _animator.Play("FadeIn");
 
         }
 
         public void CloseView(Action onClosed)
         {
-            _animator.enabled = true;
+            // _animator.enabled = true;
             _onClosed = onClosed;
-            _animator.Play("FadeOut");
+            // _animator.Play("FadeOut");
         }
         
         public void OnCloseAnimEvent()
@@ -58,7 +58,7 @@ namespace UI.Views
         
         public void OnShowAnimEvent()
         {
-            _animator.enabled = false;
+            // _animator.enabled = false;
             _pulsingAnimator.StartScaling();
             _onShown?.Invoke();
             _onShown = null;

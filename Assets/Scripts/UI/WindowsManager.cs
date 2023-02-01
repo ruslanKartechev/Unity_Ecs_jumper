@@ -4,27 +4,29 @@ namespace UI
 {
     public class WindowsManager : IWindowsManager
     {
-        // [Inject] 
         private StartWindow _startWindow;
-        // [Inject] 
         private ProgressWindow _progressWindow;
-        // [Inject] 
         private FailWindow _failWindow;
-        // [Inject] 
         private WinWindow _winWindow;
+        private BonusWindow _bonusWindow;
         private IWindow _activeWindow = null;
         
-        
-        public void Init(StartWindow startWindow, ProgressWindow progressWindow, FailWindow failWindow, WinWindow winWindow)
+        public void Init(StartWindow startWindow,
+                ProgressWindow progressWindow, 
+                FailWindow failWindow, 
+                WinWindow winWindow, 
+                BonusWindow bonusWindow)
         {
             _startWindow = startWindow;
             _progressWindow = progressWindow;
             _failWindow = failWindow;
             _winWindow = winWindow;
+            _bonusWindow = bonusWindow;
         }
 
         public void CloseAll()
         {
+            _bonusWindow.Close(false);
             _startWindow.Close(false);
             _progressWindow.Close(false);    
             _failWindow.Close(false);
@@ -46,7 +48,6 @@ namespace UI
 
         public void ShowProcess()
         {
-            // Dbg.Log("show process");
             if (_activeWindow != null)
             {
                 _activeWindow.Close(true, () => { _progressWindow.Open();});
@@ -84,6 +85,16 @@ namespace UI
             }
             _activeWindow = _failWindow;
 
+        }
+
+        public void ShowBonusWindow()
+        {
+            _bonusWindow.Open();
+        }
+
+        public void CloseBonusWindow()
+        {
+            _bonusWindow.Close();
         }
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Data.Impl;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEditor;
@@ -11,6 +12,7 @@ namespace Game.Level.Impl
         
         public int gridSize = 3;
         public float cellSize = 2;
+        public SpawnDelayData spawnDelayData;
         public GameObject _pointPrefab;
         public List<Transform> _spawnPoints;
         

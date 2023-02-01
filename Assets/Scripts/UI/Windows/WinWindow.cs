@@ -1,4 +1,5 @@
 ﻿using System;
+using Ecs;
 using Game;
 using Game.Sound;
 using Game.Sound.Data;
@@ -12,7 +13,6 @@ namespace UI.Windows
     public class WinWindow : IWindow
     {
         private WinWindowView _view;
-        [Inject] private IGameManager _gameManager;
         [Inject] private ILevelService _levelService;
         [Inject] private ISoundManager _soundManager;
 
@@ -51,7 +51,7 @@ namespace UI.Windows
             if (_clicked)
                 return;
             _clicked = true;
-            _gameManager.NextLevel();
+            // command for next level
             var sound = _soundManager.PlaySound(new SoundPlayArgs()
             {
                 name = SoundNames.UIClick,

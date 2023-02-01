@@ -56,6 +56,7 @@ MonoBehaviour:
   spawnDelay: 0.6
   gridSize: 3
   cellSize: 1.2
+  spawnDelayData: {fileID: 11400000, guid: d307a609c4c62374986f0b56027bf52b, type: 2}
   _pointPrefab: {fileID: 6705839159739601833, guid: a927a48102f5caf439e2c619140a9131, type: 3}
   _spawnPoints:
   - {fileID: 7508656878965471159}
