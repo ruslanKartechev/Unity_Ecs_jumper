@@ -30,7 +30,7 @@ namespace Installers
             // fixed update
             // lateUpdate
             // update
-            MakeUpdateAndInitSystem<InputCheckSystem>(updateSystems, initSystems);
+            MakeUpdateAndInitSystem<CheckInputSystem>(updateSystems, initSystems);
             MakeUpdateAndInitSystem<LoadLevelSystem>(updateSystems, initSystems);
             MakeUpdateAndInitSystem<SetPlayerMoveDestinationSystem>(updateSystems, initSystems);
             MakeUpdateAndInitSystem<FillCellSystem>(updateSystems, initSystems);

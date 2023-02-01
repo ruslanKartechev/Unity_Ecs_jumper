@@ -1,13 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace UI.Views
 {
+    public enum ControlButton
+    {
+        Up,
+        Down,
+        Right,
+        Left
+    }
+
     public class ProgressWindowView : WindowViewBase, IWindowView
     {
         [SerializeField] private TextMeshProUGUI _jumpsCount;
+        [SerializeField] private List<Button> _controlButtons;
 
         private Action _onShown;
         private Action _onClosed;
@@ -23,6 +34,15 @@ namespace UI.Views
             IsOpen = false;
             onClosed?.Invoke();
         }
+
+        public void InitControl(Action<ControlButton> onControlButton)
+        {
+            _controlButtons[0].onClick.AddListener(() => { onControlButton.Invoke(ControlButton.Up);});
+            _controlButtons[1].onClick.AddListener(() => { onControlButton.Invoke(ControlButton.Right);});
+            _controlButtons[2].onClick.AddListener(() => { onControlButton.Invoke(ControlButton.Down);});
+            _controlButtons[3].onClick.AddListener(() => { onControlButton.Invoke(ControlButton.Left);});
+        }
+        
 
         public void UpdateJumpsCount(int count)
         {

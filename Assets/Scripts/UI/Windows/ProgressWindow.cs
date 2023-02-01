@@ -1,6 +1,9 @@
 ﻿using System;
 using Ecs;
+using Ecs.Components;
+using Ecs.Systems;
 using UI.Views;
+using UnityEngine;
 
 namespace UI.Windows
 {
@@ -13,6 +16,7 @@ namespace UI.Windows
         {
             _view = view;
             _view.UpdateJumpsCount(0);
+            _view.InitControl(OnControlButton);
             ReactDataPool.MoveCount.SubOnChange((value) => _view.UpdateJumpsCount(value) );
         }
         
@@ -36,6 +40,27 @@ namespace UI.Windows
             }
         }
         
+        
+        private void OnControlButton(ControlButton button)
+        {
+            ref var inputComp = ref Pool.World.AddComponentToEntity<MoveInputComponent>(Pool.PlayerEntity);
+            switch (button)
+            {
+                case ControlButton.Up:
+                    inputComp.Value = Vector2Int.up;
+                    break;
+                case ControlButton.Down:
+                    inputComp.Value = Vector2Int.down;
+                    break;
+                case ControlButton.Right:
+                    inputComp.Value = Vector2Int.right;
+                    break;
+                case ControlButton.Left:
+                    inputComp.Value = Vector2Int.left;
+                    break;
+            }
+        }
+
         
     }
 }

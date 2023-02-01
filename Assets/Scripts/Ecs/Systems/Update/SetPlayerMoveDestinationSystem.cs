@@ -11,36 +11,29 @@ namespace Ecs.Systems
         private EcsWorld _world;
         private EcsPool<MoveInputComponent> _moveInputPool;
         private EcsPool<CellPositionComponent> _cellPositionsPool;
+        private EcsPool<IsMovingComponent> _isMovingPool;
 
         public void Init(IEcsSystems systems)
         {
             _world = systems.GetWorld();
-            _filter = _world.Filter<PlayerComponent>().Inc<CellPositionComponent>().End();
-            _moveInputPool = _world.GetPool<MoveInputComponent>();
+            _filter = _world.Filter<PlayerComponent>().Inc<MoveInputComponent>().Inc<CellPositionComponent>().Inc<CanMoveComponent>().Exc<IsMovingComponent>().End();
             _cellPositionsPool = _world.GetPool<CellPositionComponent>();
-
+            // _isMovingPool = _world.GetPool<IsMovingComponent>();
+            _moveInputPool = _world.GetPool<MoveInputComponent>();
         }
         
         public void Run(IEcsSystems systems)
         {
-            if (Pool.World.HasComponent<CanMoveComponent>(Pool.PlayerEntity) == false)
-                return;
-            
-            ref var input = ref _moveInputPool.Get(Pool.PlayerEntity);
-            if (input.Value == Vector2.zero)
-                return;
-            
             foreach (var entity in _filter)
             {
-                if (_world.HasComponent<IsMovingComponent>(entity))
-                    continue;
-
+                var inputComp = _moveInputPool.Get(Pool.PlayerEntity);
+                _moveInputPool.Del(entity);
                 ref var cellPosComponent = ref _cellPositionsPool.Get(entity);
                 ref var map = ref _world.GetComponent<MapComponent>(Pool.MapEntity);
                 var cell_x = cellPosComponent.x;
                 var cell_y = cellPosComponent.y;
-                cell_x += input.Value.x;
-                cell_y += input.Value.y;
+                cell_x += inputComp.Value.x;
+                cell_y += inputComp.Value.y;
                 var validMove = true;
                 if (cell_x >= map.Width || cell_x < 0)
                     validMove = false;

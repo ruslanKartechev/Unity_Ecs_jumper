@@ -36,7 +36,6 @@ namespace Ecs
             world.AddComponentToEntity<MaxJumpHeightComponent>(entity);
             
             world.AddComponentToEntity<PlayerComponent>(entity);
-            world.AddComponentToEntity<MoveInputComponent>(entity);
             world.AddComponentToEntity<CurrentLevelComponent>(entity);
             world.AddComponentToEntity<JumpCountComponent>(entity);
             
