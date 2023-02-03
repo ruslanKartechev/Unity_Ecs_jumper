@@ -32,7 +32,7 @@ namespace UI.Windows
             {
                 _view.IsOpen = true;
             }
-            _view.HeaderText = $"LEVEL: {_levelService.TotalLevelsPassed + 1}";
+            _view.HeaderText = $"LEVEL {_levelService.TotalLevelsPassed + 1}";
         }
 
         public void Close(bool animated = true, Action onDone = null)

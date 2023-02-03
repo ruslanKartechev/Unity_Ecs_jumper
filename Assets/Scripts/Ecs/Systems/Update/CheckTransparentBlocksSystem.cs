@@ -24,9 +24,9 @@ namespace Ecs.Systems
                 // var playerHeight = command.Height;
                 // var playerCellY = command.yCellPos;
                 var height = 0f;
-                if (_world.HasComponent<DropMoveComponent>(block))
+                if (_world.HasComponent<MoveBlockComponent>(block))
                 {
-                    height = _world.GetComponent<DropMoveComponent>(block).EndPosition.y;   
+                    height = _world.GetComponent<MoveBlockComponent>(block).EndPosition.y;   
                 }
                 else
                 {

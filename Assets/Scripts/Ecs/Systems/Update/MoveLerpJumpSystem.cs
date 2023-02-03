@@ -33,7 +33,6 @@ namespace Ecs.Systems
             _lerpMovePool = _world.GetPool<LerpMoveComponent>();
             _verticalOffsetPool = _world.GetPool<VerticalOffsetComponent>();
             _moveSpeedPool = _world.GetPool<MoveSpeedComponent>();
-
         }
 
         public void Run(IEcsSystems systems)
@@ -46,6 +45,9 @@ namespace Ecs.Systems
                 if (lerpMoveComp.Value >= 1f)
                 {
                     lerpMoveComp.Value = 0f;
+                    ref var height = ref world.GetComponent<CurrentHeightComponent>(entity);
+                    height.Value = lerpMoveComp.EndPosition.y;
+                    ReactDataPool.PlayerHeight.Value = height.Value;
                     world.RemoveComponent<IsMovingComponent>(entity);
                     world.RemoveComponent<LerpMoveComponent>(entity);
                     continue;

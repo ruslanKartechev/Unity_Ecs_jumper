@@ -38,12 +38,15 @@ namespace Ecs
             world.AddComponentToEntity<PlayerComponent>(entity);
             world.AddComponentToEntity<CurrentLevelComponent>(entity);
             world.AddComponentToEntity<JumpCountComponent>(entity);
+            world.AddComponentToEntity<CurrentHeightComponent>(entity);
             
             world.AddComponentToEntity<JumpHeightBonusCountComponent>(entity);
             world.AddComponentToEntity<JumpToTopBonusCountComponent>(entity);
             world.AddComponentToEntity<BlockSpawnDelayComponent>(entity);
             world.AddComponentToEntity<BlocksCountComponent>(entity);
             world.AddComponentToEntity<BlockSpawnDataComponent>(entity);
+            world.AddComponentToEntity<GameStateComponent>(entity);
+            world.AddComponentToEntity<TransformVC>(entity);
             
             Pool.PlayerEntity = entity;
             return entity;

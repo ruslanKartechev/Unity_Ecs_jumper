@@ -1,4 +1,5 @@
-﻿using Ecs.Components;
+﻿using Data;
+using Ecs.Components;
 using Leopotam.EcsLite;
 using UI;
 using Zenject;
@@ -17,7 +18,10 @@ namespace Ecs.Systems
             foreach (var entity in _filter)
             {
                 _failPool.Del(entity);
+                _windowsManager.CloseBonusWindow();
                 _windowsManager.ShowFail();
+                ref var gameState = ref _world.GetComponent<GameStateComponent>(Pool.PlayerEntity);
+                gameState.Value = EGameState.Fail;
                 Pool.World.RemoveComponent<CanMoveComponent>(Pool.PlayerEntity);
                 Pool.World.RemoveComponent<CanSpawnComponent>(Pool.PlayerEntity);
             }   

@@ -12,21 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54e4fe09f6404816b515937201eb8eff, type: 3}
   m_Name: GlobalSettings
   m_EditorClassIdentifier: 
-  _floorMask:
-    serializedVersion: 2
-    m_Bits: 0
-  _driftAreaStartminSpeed: 10
-  _exitTime: 0
-  _exitSpeedMod: 0
-  _maxOffset: 0
-  _driftDeceleration: 0
-  _driftRotSpeed: 0
-  _percentDistanceToCrash: 0
-  _repawnPercentDistance: 0
-  _respawnDelay: 0
-  _respawnVerticalOffset: 0
-  _speedStuckThreshold: 1.5
-  _stuckTimeMax: 0.2
-  _spawnUpOffset: 3
-  _breakApplySpeedDiff: 2
-  _randomizedOffset: 0.5
+  _heightToWin: 50

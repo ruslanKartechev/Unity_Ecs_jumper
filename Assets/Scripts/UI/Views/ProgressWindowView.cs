@@ -44,20 +44,20 @@ namespace UI.Views
         }
         
 
-        public void UpdateJumpsCount(int count)
+        public void UpdatePlayerHeight(float value)
         {
             if (IsOpen)
             {
-                var downScale = 0.8f;
+                var downScale = 0.9f;
                 var sequence = DOTween.Sequence();
                 sequence.Append(_jumpsCount.transform.DOScale(downScale, 0.1f).OnComplete(() =>
                 {
-                    _jumpsCount.text = $"{count}";
+                    _jumpsCount.text = $"{value:N1}m";
                 })).Append(_jumpsCount.transform.DOScale(1, 0.1f));
             }
             else
             {
-                _jumpsCount.text = $"{count}";
+                _jumpsCount.text = $"{value:N1}m";
             }
         }
         

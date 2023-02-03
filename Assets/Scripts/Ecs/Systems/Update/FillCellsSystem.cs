@@ -69,16 +69,12 @@ namespace Ecs.Systems
             var spawnPosition = data.Position;
             var viewInstance = _instantiateService.Spawn<CellBlockView>(prefab.gameObject, _parentService.DefaultParent, spawnPosition);
             data.Position.y += viewInstance.Height;
-
+            var blockCellPos = new Vector2Int(command.x, command.y);
             var blockEntity = EntityMaker.MakeBlockEntity(world, 
                 spawnPosition, 
                 viewInstance, 
-                new Vector2Int(command.x, command.y));
-            
-            ref var dropMoveComponent = ref world.AddComponentToEntity<DropMoveComponent>(blockEntity);
-            dropMoveComponent.EndPosition = spawnPosition;
-            dropMoveComponent.StartPosition = spawnPosition + Vector3.up * _spawnUpOffset;
-            dropMoveComponent.Time = _dropTime;
+                blockCellPos);
+            AddMoveComponent(blockEntity, spawnPosition, blockCellPos);
             IncreaseCount();            
 
             if (_world.HasComponent<CheckBlockTransparencyComponent>(blockEntity))
@@ -90,6 +86,65 @@ namespace Ecs.Systems
                 checkTransparency.yCellPos = playerCellPos.y;
             }
             
+        }
+
+        private void AddMoveComponent(int blockEntity, Vector3 spawnPosition, Vector2Int cellPos)
+        {
+            ref var dropMoveComponent = ref _world.AddComponentToEntity<MoveBlockComponent>(blockEntity);
+            dropMoveComponent.EndPosition = spawnPosition;
+            dropMoveComponent.Time = _dropTime;
+            if (cellPos.y == 1 && cellPos.x == 0)
+            {
+                dropMoveComponent.StartPosition = spawnPosition + Vector3.left * _spawnUpOffset;
+            }
+            else if (cellPos.y == 1 && cellPos.x == 2)
+            {
+                dropMoveComponent.StartPosition = spawnPosition + Vector3.right * _spawnUpOffset;
+            }
+            else if (cellPos.y == 0 && cellPos.x == 1)
+            {
+                dropMoveComponent.StartPosition = spawnPosition + Vector3.back * _spawnUpOffset;
+            }
+            else if (cellPos.y == 2 && cellPos.x == 1)
+            {
+                dropMoveComponent.StartPosition = spawnPosition + Vector3.forward * _spawnUpOffset;
+            }
+            else if (cellPos.y == 0 && cellPos.x == 0) // corner left bottom
+            {
+                var random = UnityEngine.Random.Range(0f, 1f);
+                if (random > 0.5f)
+                    dropMoveComponent.StartPosition = spawnPosition + Vector3.left * _spawnUpOffset;
+                else
+                    dropMoveComponent.StartPosition = spawnPosition + Vector3.back * _spawnUpOffset;
+            }
+            else if (cellPos.y == 0 && cellPos.x == 2) // corner right bottom
+            {
+                var random = UnityEngine.Random.Range(0f, 1f);
+                if (random > 0.5f)
+                    dropMoveComponent.StartPosition = spawnPosition + Vector3.right * _spawnUpOffset;
+                else
+                    dropMoveComponent.StartPosition = spawnPosition + Vector3.back * _spawnUpOffset;
+            }
+            else if (cellPos.y == 2 && cellPos.x == 0) // corner left top
+            {
+                var random = UnityEngine.Random.Range(0f, 1f);
+                if (random > 0.5f)
+                    dropMoveComponent.StartPosition = spawnPosition + Vector3.left * _spawnUpOffset;
+                else
+                    dropMoveComponent.StartPosition = spawnPosition + Vector3.forward * _spawnUpOffset;
+            }
+            else if (cellPos.y == 2 && cellPos.x == 0) // corner right top
+            {
+                var random = UnityEngine.Random.Range(0f, 1f);
+                if (random > 0.5f)
+                    dropMoveComponent.StartPosition = spawnPosition + Vector3.right * _spawnUpOffset;
+                else
+                    dropMoveComponent.StartPosition = spawnPosition + Vector3.forward * _spawnUpOffset;
+            }
+            else
+            {
+                dropMoveComponent.StartPosition = spawnPosition + Vector3.up * _spawnUpOffset;
+            }
         }
 
         private void IncreaseCount()

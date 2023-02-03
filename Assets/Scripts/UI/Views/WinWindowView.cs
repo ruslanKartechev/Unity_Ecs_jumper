@@ -10,8 +10,9 @@ namespace UI.Views
     {
         [SerializeField] private Button _nextButton;
         [SerializeField] private TextMeshProUGUI _levelText;
-        [SerializeField] private Animator _animator;
         [SerializeField] private PulsingAnimator _pulsingAnimator;
+
+        private Action _nextLevelAction;
 
         private Action _onShown;
         private Action _onClosed;
@@ -22,8 +23,6 @@ namespace UI.Views
             set => _levelText.text = value;
         }
 
-        private Action _nextLevelAction;
-        
         public void InitButtons(Action nextLevel)
         {
             _nextLevelAction = nextLevel;
@@ -35,18 +34,13 @@ namespace UI.Views
         
         public void ShowView(Action onShown)
         {
-            // _animator.enabled = true;
             IsOpen = true;
             _onShown = onShown;
-            // _animator.Play("FadeIn");
-
         }
 
         public void CloseView(Action onClosed)
         {
-            // _animator.enabled = true;
             _onClosed = onClosed;
-            // _animator.Play("FadeOut");
         }
         
         public void OnCloseAnimEvent()
@@ -58,7 +52,6 @@ namespace UI.Views
         
         public void OnShowAnimEvent()
         {
-            // _animator.enabled = false;
             _pulsingAnimator.StartScaling();
             _onShown?.Invoke();
             _onShown = null;

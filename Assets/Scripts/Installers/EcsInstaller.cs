@@ -43,13 +43,15 @@ namespace Installers
             MakeUpdateAndInitSystem<SpawnRandomBlockSystem>(updateSystems, initSystems);
             MakeUpdateAndInitSystem<SetCameraLookPositionSystem>(updateSystems, initSystems);
             MakeUpdateAndInitSystem<MoveCameraSystem>(updateSystems, initSystems);
-            MakeUpdateAndInitSystem<DropMoveSystem>(updateSystems, initSystems);
+            MakeUpdateAndInitSystem<MoveBlocksSystem>(updateSystems, initSystems);
             MakeUpdateAndInitSystem<CheckTransparentBlocksSystem>(updateSystems, initSystems);
             MakeUpdateAndInitSystem<SpawnPlayerSystem>(updateSystems, initSystems);
             MakeUpdateAndInitSystem<CheckPotentialMoveSystem>(updateSystems, initSystems);
             MakeUpdateAndInitSystem<FailLevelSystem>(updateSystems, initSystems);
             MakeUpdateAndInitSystem<AddJumpHeightBonusSystem>(updateSystems, initSystems);
             MakeUpdateAndInitSystem<AddJumpToTopBonusSystem>(updateSystems, initSystems);
+            MakeUpdateAndInitSystem<NextLevelSystem>(updateSystems, initSystems);
+            MakeInitSystem<CheckWinConditionSystem>( initSystems);
 
             // view
             MakeUpdateAndInitSystem<JumpPoofVS>(updateSystems, initSystems);

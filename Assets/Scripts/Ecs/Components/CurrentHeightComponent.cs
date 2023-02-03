@@ -2,11 +2,6 @@
 {
     public struct CurrentHeightComponent
     {
-        public int Height;
-
-        public CurrentHeightComponent(int height)
-        {
-            Height = height;
-        }
+        public float Value;
     }
 }

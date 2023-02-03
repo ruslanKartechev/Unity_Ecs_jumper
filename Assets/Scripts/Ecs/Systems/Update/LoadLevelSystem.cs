@@ -4,7 +4,7 @@ using Game.Level.Impl;
 using Leopotam.EcsLite;
 using Services.Instantiate;
 using Services.Parent;
-using TMPro;
+using UI;
 using Zenject;
 
 namespace Ecs.Systems
@@ -15,6 +15,7 @@ namespace Ecs.Systems
         private EcsFilter _filter;
         private EcsPool<LoadLevelComponent> _pool;
         
+        [Inject] private IWindowsManager _windowsManager;
         [Inject] private ILevelRepository _levelRepository;
         [Inject] private IInstantiateService _instantiateService;
         [Inject] private IParentService _parentService;
@@ -22,7 +23,6 @@ namespace Ecs.Systems
         public void Init(IEcsSystems systems)
         {
             _world = systems.GetWorld();
-
             _filter = systems.GetWorld().Filter<LoadLevelComponent>().End();
             _pool = systems.GetWorld().GetPool<LoadLevelComponent>();   
         }
@@ -73,16 +73,21 @@ namespace Ecs.Systems
                 blockSpawnDelay.Data = viewInstance.spawnDelayData;
                 
                 SetBonuses();
+                ref var gameState = ref _world.GetComponent<GameStateComponent>(Pool.PlayerEntity);
+                gameState.Value = EGameState.StartWindow;
                 _world.AddComponentToNew<SpawnPlayerComponent>();
+                
+                _windowsManager.CloseAll();
+                _windowsManager.ShowStart();
             }
         }
 
         private void SetBonuses()
         {
             ref var jumpHeightCount = ref _world.GetComponent<JumpHeightBonusCountComponent>(Pool.PlayerEntity);
-            jumpHeightCount.Value = 5;
+            jumpHeightCount.Value = 3;
             ref var jumpToTopCount = ref _world.GetComponent<JumpToTopBonusCountComponent>(Pool.PlayerEntity);
-            jumpToTopCount.Value = 4;   
+            jumpToTopCount.Value = 2;   
         }
         
         

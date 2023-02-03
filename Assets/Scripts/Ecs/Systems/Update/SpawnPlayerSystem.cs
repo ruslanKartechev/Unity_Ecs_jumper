@@ -18,6 +18,12 @@ namespace Ecs.Systems
         [Inject] private IInstantiateService _instantiateService;
         [Inject] private IParentService _parentService;
         
+        public void Init(IEcsSystems systems)
+        {
+            _pool = systems.GetWorld().GetPool<SpawnPlayerComponent>();
+            _filter = systems.GetWorld().Filter<SpawnPlayerComponent>().End();
+        }
+        
         public void Run(IEcsSystems systems)
         {
             foreach (var command in _filter)
@@ -29,7 +35,10 @@ namespace Ecs.Systems
                 var x = map.Height / 2;
                 var y = map.Width / 2;
                 var position = MapHelpers.GetPositionAtCell(x, y);
-                
+                ref var height = ref world.GetComponent<CurrentHeightComponent>(entity);
+                height.Value = position.y;
+                ReactDataPool.PlayerHeight.Value = height.Value;
+
                 var prefab = _prefabsRepository.GetPrefabGO(PrefabNames.Player);
                 var instance = _instantiateService.Spawn<PlayerView>(prefab, _parentService.DefaultParent, position);
                 var settings = instance.Settings;
@@ -42,7 +51,7 @@ namespace Ecs.Systems
                 ref var speedComponent = ref world.GetComponent<MoveSpeedComponent>(entity);
                 speedComponent.Value = settings.MoveSpeed;
                 
-                ref var viewComp = ref world.AddComponentToEntity<TransformVC>(entity);
+                ref var viewComp = ref world.GetComponent<TransformVC>(entity);
                 viewComp.Body = instance.transform;
                 
                 ref var vertOffset = ref world.GetComponent<VerticalOffsetComponent>(entity);
@@ -62,10 +71,6 @@ namespace Ecs.Systems
             }
         }
         
-        public void Init(IEcsSystems systems)
-        {
-            _pool = systems.GetWorld().GetPool<SpawnPlayerComponent>();
-            _filter = systems.GetWorld().Filter<SpawnPlayerComponent>().End();
-        }
+    
     }
 }

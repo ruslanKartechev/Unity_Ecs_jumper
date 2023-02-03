@@ -15,9 +15,9 @@ namespace UI.Windows
         public ProgressWindow(ProgressWindowView view)
         {
             _view = view;
-            _view.UpdateJumpsCount(0);
+            _view.UpdatePlayerHeight(0);
             _view.InitControl(OnControlButton);
-            ReactDataPool.MoveCount.SubOnChange((value) => _view.UpdateJumpsCount(value) );
+            ReactDataPool.PlayerHeight.SubOnChange((value) => _view.UpdatePlayerHeight(value) );
         }
         
         public void Open(bool animated = true, Action onDone = null)

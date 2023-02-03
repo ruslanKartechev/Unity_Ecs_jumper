@@ -6,6 +6,7 @@ namespace Ecs
     {
         public static ReactiveProperty<int> MoveCount = new ReactiveProperty<int>();
         public static ReactiveProperty<int> BlocksCount = new ReactiveProperty<int>();
+        public static ReactiveProperty<float> PlayerHeight = new ReactiveProperty<float>();
         
     }
 }

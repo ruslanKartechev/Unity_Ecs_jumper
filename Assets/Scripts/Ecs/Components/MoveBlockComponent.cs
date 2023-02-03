@@ -2,7 +2,7 @@
 
 namespace Ecs.Components
 {
-    public struct DropMoveComponent
+    public struct MoveBlockComponent
     {
         public Vector3 StartPosition;
         public Vector3 EndPosition;

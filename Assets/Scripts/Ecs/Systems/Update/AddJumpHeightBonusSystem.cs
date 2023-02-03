@@ -1,5 +1,4 @@
 ﻿using Ecs.Components;
-using Helpers;
 using Leopotam.EcsLite;
 
 namespace Ecs.Systems
@@ -43,7 +42,7 @@ namespace Ecs.Systems
             {
                 ref var comp = ref _jumpWithBonusCountPool.Get(entity);
                 comp.Count++;
-                Dbg.LogGreen($"Jump count with bonus: {comp.Count}, max count: {comp.MaxCount}");
+                // Dbg.LogGreen($"Jump count with bonus: {comp.Count}, max count: {comp.MaxCount}");
                 if (comp.Count >= comp.MaxCount)
                 {
                     _jumpWithBonusCountPool.Del(entity);

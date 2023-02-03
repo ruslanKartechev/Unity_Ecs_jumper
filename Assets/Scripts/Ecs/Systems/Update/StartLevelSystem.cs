@@ -1,4 +1,5 @@
-﻿using Ecs.Components;
+﻿using Data;
+using Ecs.Components;
 using Leopotam.EcsLite;
 using Services.MonoHelpers;
 using UI;
@@ -10,10 +11,12 @@ namespace Ecs.Systems
     {
         [Inject] private IWindowsManager _windowsManager;
         private EcsFilter _filter;
+        private EcsWorld _world;
         
         public void Init(IEcsSystems systems)
         {
-            _filter = systems.GetWorld().Filter<PlayerComponent>().Inc<StartLevelComponent>().End();
+            _world = systems.GetWorld();
+            _filter = _world.Filter<PlayerComponent>().Inc<StartLevelComponent>().End();
         }
         
         public void Run(IEcsSystems systems)
@@ -22,11 +25,13 @@ namespace Ecs.Systems
             {
                 _windowsManager.ShowProcess();
                 _windowsManager.ShowBonusWindow();
-                Pool.World.AddComponentToEntity<CanMoveComponent>(entity);
-                Pool.World.AddComponentToEntity<CanSpawnComponent>(entity);
-                Pool.World.AddComponentToEntity<ElapsedSinceBlockBlockSpawn>(entity);
+                _world.AddComponentToEntity<CanMoveComponent>(entity);
+                _world.AddComponentToEntity<CanSpawnComponent>(entity);
+                _world.AddComponentToEntity<ElapsedSinceBlockBlockSpawn>(entity);
                 
-                Pool.World.RemoveComponent<StartLevelComponent>(entity);
+                _world.RemoveComponent<StartLevelComponent>(entity);
+                ref var gameState = ref _world.GetComponent<GameStateComponent>(Pool.PlayerEntity);
+                gameState.Value = EGameState.LevelPlay;
             }      
         }
 

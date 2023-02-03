@@ -26,7 +26,6 @@ namespace Ecs.Systems
                 var maxHeight = _world.GetComponent<MaxJumpHeightComponent>(Pool.PlayerEntity).Value;
                 var cellTops = _world.GetComponent<CellTopsComponent>(Pool.MapEntity);
                 var map = _world.GetComponent<MapComponent>(Pool.MapEntity);
-
                 var canMove = CheckPos(cellPos.x + 1, cellPos.y, ref cellTops, ref map, playerY, maxHeight)
                           || CheckPos(cellPos.x - 1, cellPos.y, ref cellTops, ref map, playerY, maxHeight)
                           || CheckPos(cellPos.x, cellPos.y + 1, ref cellTops, ref map, playerY, maxHeight)
@@ -34,9 +33,7 @@ namespace Ecs.Systems
                 
                 if (canMove == false)
                 {
-                    Dbg.Log($"CAN MOVE: false, playerY: {playerY}, max jump height: {maxHeight}");
-                    
-        
+                    // Dbg.Log($"Cannot move, playerY: {playerY}, max jump height: {maxHeight}");
                     ref var heightBonusCount = ref Pool.World.GetComponent<JumpHeightBonusCountComponent>(Pool.PlayerEntity);
                     if (heightBonusCount.Value > 0)
                     {
