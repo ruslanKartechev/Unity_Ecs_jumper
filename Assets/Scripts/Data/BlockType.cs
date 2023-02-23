@@ -3,6 +3,7 @@
     public enum BlockType
     {
         Default,
-        Ground
+        Ground,
+        Breakable
     }
 }

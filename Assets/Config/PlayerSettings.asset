@@ -15,4 +15,4 @@ MonoBehaviour:
   _moveSpeed: 6
   _upOffset: 1.5
   _upOffsetLerpValue: 0.75
-  _maxJumpHeight: 1
+  _maxJumpHeight: 5

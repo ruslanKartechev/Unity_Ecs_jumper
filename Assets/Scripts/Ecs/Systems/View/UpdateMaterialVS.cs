@@ -1,6 +1,5 @@
 ﻿using Ecs.Components;
 using Ecs.Components.View;
-using Helpers;
 using Leopotam.EcsLite;
 
 namespace Ecs.Systems

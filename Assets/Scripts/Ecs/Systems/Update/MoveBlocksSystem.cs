@@ -33,10 +33,9 @@ namespace Ecs.Systems
                 ref var posComp = ref _world.GetComponent<PositionComponent>(entity);
                 posComp.Value = Vector3.Lerp(moveComp.StartPosition, moveComp.EndPosition,
                     moveComp.ElapsedTime / moveComp.Time);
+                
                 if (t >= 1)
-                {
                     _dropPool.Del(entity);
-                }
             }
         }
     }

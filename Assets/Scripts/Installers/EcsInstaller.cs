@@ -30,10 +30,10 @@ namespace Installers
             // fixed update
             // lateUpdate
             // update
-            MakeUpdateAndInitSystem<CheckInputSystem>(updateSystems, initSystems);
             MakeUpdateAndInitSystem<LoadLevelSystem>(updateSystems, initSystems);
-            MakeUpdateAndInitSystem<SetPlayerMoveDestinationSystem>(updateSystems, initSystems);
             MakeUpdateAndInitSystem<FillCellSystem>(updateSystems, initSystems);
+            MakeUpdateAndInitSystem<SetPlayerMoveDestinationSystem>(updateSystems, initSystems);
+            MakeUpdateAndInitSystem<CheckInputSystem>(updateSystems, initSystems);
             
             MakeUpdateAndInitSystem<ScaleOnJumpSystem>(updateSystems, initSystems);
             MakeUpdateAndInitSystem<MoveLerpJumpSystem>(updateSystems, initSystems);
@@ -43,7 +43,10 @@ namespace Installers
             MakeUpdateAndInitSystem<SpawnRandomBlockSystem>(updateSystems, initSystems);
             MakeUpdateAndInitSystem<SetCameraLookPositionSystem>(updateSystems, initSystems);
             MakeUpdateAndInitSystem<MoveCameraSystem>(updateSystems, initSystems);
+            
+            MakeUpdateAndInitSystem<RotateFromToSystem>(updateSystems, initSystems);
             MakeUpdateAndInitSystem<MoveBlocksSystem>(updateSystems, initSystems);
+            
             MakeUpdateAndInitSystem<CheckTransparentBlocksSystem>(updateSystems, initSystems);
             MakeUpdateAndInitSystem<SpawnPlayerSystem>(updateSystems, initSystems);
             MakeUpdateAndInitSystem<CheckPotentialMoveSystem>(updateSystems, initSystems);

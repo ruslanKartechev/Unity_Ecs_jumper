@@ -7,21 +7,17 @@ using UnityEngine.UI;
 
 namespace UI.Views
 {
-    public enum ControlButton
-    {
-        Up,
-        Down,
-        Right,
-        Left
-    }
-
     public class ProgressWindowView : WindowViewBase, IWindowView
     {
         [SerializeField] private TextMeshProUGUI _jumpsCount;
-        [SerializeField] private List<Button> _controlButtons;
-
+        [SerializeField] private List<ControlButtonData> _controlButtons;
+        [SerializeField] private TextMeshProUGUI _tierText;
+        [SerializeField] private Image _highlightImage;
+        [SerializeField] private float _moveTime, _moveDist;
+        
         private Action _onShown;
         private Action _onClosed;
+        private Sequence _highlightSequence;
         
         public void ShowView(Action onShown)
         {
@@ -37,10 +33,17 @@ namespace UI.Views
 
         public void InitControl(Action<ControlButton> onControlButton)
         {
-            _controlButtons[0].onClick.AddListener(() => { onControlButton.Invoke(ControlButton.Up);});
-            _controlButtons[1].onClick.AddListener(() => { onControlButton.Invoke(ControlButton.Right);});
-            _controlButtons[2].onClick.AddListener(() => { onControlButton.Invoke(ControlButton.Down);});
-            _controlButtons[3].onClick.AddListener(() => { onControlButton.Invoke(ControlButton.Left);});
+            foreach (var button in _controlButtons)
+            {
+                button.Init();
+                button.MoveDist = _moveDist;
+                button.MoveTime = _moveTime;
+                button.Btn.onClick.AddListener(() =>
+                {
+                    onControlButton.Invoke(button.ButtonType);
+                    button.Press();
+                });
+            }
         }
         
 
@@ -71,6 +74,18 @@ namespace UI.Views
         {
             _onShown?.Invoke();
             _onShown = null;
+        }
+
+        public void UpdateTier(string text)
+        { 
+            _tierText.text = text;
+            if(_open)
+            {
+                _highlightSequence.Kill();
+                _highlightSequence = DOTween.Sequence();
+                _highlightSequence.Append(_highlightImage.DOFade(1f, 0.2f))
+                    .Append(_highlightImage.DOFade(0f, 0.35f));
+            }
         }
         
         protected override void StopAnimators()

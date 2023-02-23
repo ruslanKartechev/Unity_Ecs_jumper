@@ -21,8 +21,6 @@ namespace Ecs.Systems
             {
                 var command = _world.GetComponent<CheckBlockTransparencyComponent>(block);
                 _world.RemoveComponent<CheckBlockTransparencyComponent>(block);
-                // var playerHeight = command.Height;
-                // var playerCellY = command.yCellPos;
                 var height = 0f;
                 if (_world.HasComponent<MoveBlockComponent>(block))
                 {

@@ -4,7 +4,7 @@ namespace View
 {
     public class CameraView : MonoBehaviour
     {
-        public float OffsetValue;
+        public Vector3 OffsetValue;
         public float MoveSpeed;
     }
 }

@@ -14,7 +14,6 @@ namespace Ecs.Systems.Init
             var world = systems.GetWorld();
             EntityMaker.MakePlayerEntity(world);
             EntityMaker.MakeMapEntity(world);
-            EntityMaker.MakeLevelEntity(world);
             ref var comp = ref world.AddComponentToNew<LoadLevelComponent>();
             comp.Index = _levelService.CurrentLevelIndex;
             

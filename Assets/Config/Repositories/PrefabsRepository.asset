@@ -15,7 +15,11 @@ MonoBehaviour:
   _prefabDatas:
   - Name: GroundBlock
     Prefab: {fileID: 2327715230224233119, guid: f8510ed63da1a1d40879aee3cb15802d, type: 3}
+  - Name: BreakableBlock
+    Prefab: {fileID: 4749196616024853241, guid: 6ec1bc66b6c1801468f26e377392eb8a, type: 3}
   - Name: AddBlock
     Prefab: {fileID: 5499203260657301427, guid: dbe517c27a5b6eb49bffb70e615d1997, type: 3}
+  - Name: Player
+    Prefab: {fileID: 4230581144977720951, guid: a874c7ffbfa64614e951ca44264393d4, type: 3}
   - Name: Player
     Prefab: {fileID: 4230581144977720951, guid: a874c7ffbfa64614e951ca44264393d4, type: 3}

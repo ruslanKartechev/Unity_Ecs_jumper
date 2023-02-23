@@ -382,7 +382,6 @@ MonoBehaviour:
   _raycaster: {fileID: 7840421239708748408}
   _nextButton: {fileID: 7653346163497985586}
   _levelText: {fileID: 6106337339654794579}
-  _animator: {fileID: 0}
   _pulsingAnimator: {fileID: 4958958226872440332}
 --- !u!223 &7840421239708748414
 Canvas:
@@ -444,4 +443,4 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0

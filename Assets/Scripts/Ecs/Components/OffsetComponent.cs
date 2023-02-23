@@ -1,7 +1,9 @@
-﻿namespace Ecs.Components
+﻿using UnityEngine;
+
+namespace Ecs.Components
 {
     public struct OffsetComponent
     {
-        public float Value;
+        public Vector3 Value;
     }
 }

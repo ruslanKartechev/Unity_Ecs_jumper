@@ -7,15 +7,20 @@ namespace Ecs.Systems
     public class TransformMoveVS : IEcsRunSystem, IEcsInitSystem
     {
         private EcsFilter _filter;
-        private EcsPool<TransformVC> _pool;
+        private EcsFilter _rotFilter;
+
+        private EcsPool<TransformVC> _transformPool;
         private EcsPool<PositionComponent> _positionPool;
+        private EcsPool<RotationComponent> _rotationPool;
 
         
         public void Init(IEcsSystems systems)
         {
-            _filter = systems.GetWorld().Filter<TransformVC>().Inc<PositionComponent>().End();
-            _pool = systems.GetWorld().GetPool<TransformVC>();
+            _filter = systems.GetWorld().Filter<TransformVC>().Inc<RotationComponent>().Inc<PositionComponent>().End();
+            
+            _transformPool = systems.GetWorld().GetPool<TransformVC>();
             _positionPool = systems.GetWorld().GetPool<PositionComponent>();
+            _rotationPool = systems.GetWorld().GetPool<RotationComponent>();
         }
         
         
@@ -23,10 +28,11 @@ namespace Ecs.Systems
         {
             foreach (var entity in _filter)
             {
-                ref var comp = ref _pool.Get(entity);
+                ref var transformComp = ref _transformPool.Get(entity);
                 ref var posComp = ref _positionPool.Get(entity);
-                comp.Body.position = posComp.Value;
-                
+                transformComp.Body.position = posComp.Value;
+                var rot = _rotationPool.Get(entity);
+                transformComp.Body.rotation = rot.Value;
             }
         }
 

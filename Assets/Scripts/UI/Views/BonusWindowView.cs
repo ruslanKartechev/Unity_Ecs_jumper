@@ -8,14 +8,23 @@ namespace UI.Views
 {
     public class BonusWindowView : WindowViewBase, IWindowView
     {
-        [SerializeField] private TextMeshProUGUI _jumpHeightCount;
-        [SerializeField] private TextMeshProUGUI _jumpToTopCount;
-        [SerializeField] private Button _jumpHeightBonus;
-        [SerializeField] private Button _jumpToTopBonus;
+
+        [System.Serializable]
+        public class ButtonData
+        {
+            public Button Button;
+            public TextMeshProUGUI Text;
+            public TextMeshProUGUI CountText;
+            public Image Icon;
+            
+
+        }
+        [SerializeField] private ButtonData _jumpHeightBonus;
+        [SerializeField] private ButtonData _jumpToTopBonus;
 
         private float _downPunchScale = 0.6f;
-        private float _highlightScale = 0.75f;
-        private float _highlightPeriod = 0.06f;
+        private float _highlightScale = 0.8f;
+        private float _highlightPeriod = 0.05f;
         private int _highlightLoops = 2;
         private Sequence _highlightToTopSeq;
         private Sequence _highlightJumpHeightSeq;
@@ -23,8 +32,8 @@ namespace UI.Views
         
         public void Init(Action onJumpCountButton, Action onJumpToTopBonus)
         {
-            _jumpHeightBonus.onClick.AddListener(() => { onJumpCountButton?.Invoke();});
-            _jumpToTopBonus.onClick.AddListener(() => { onJumpToTopBonus?.Invoke();});
+            _jumpHeightBonus.Button.onClick.AddListener(() => { onJumpCountButton?.Invoke();});
+            _jumpToTopBonus.Button.onClick.AddListener(() => { onJumpToTopBonus?.Invoke();});
         }
 
         public void SetJumpHeightBonusCount(int count)
@@ -32,14 +41,14 @@ namespace UI.Views
             if (IsOpen)
             {
                 var sequence = DOTween.Sequence();
-                sequence.Append(_jumpHeightCount.transform.DOScale(_downPunchScale, 0.1f).OnComplete(() =>
+                sequence.Append(_jumpHeightBonus.Icon.transform.DOScale(_downPunchScale, 0.1f).OnComplete(() =>
                 {
-                    _jumpHeightCount.text = $"{count}";
-                })).Append(_jumpHeightCount.transform.DOScale(1, 0.1f));
+                    _jumpHeightBonus.CountText.text = $"x{count}";
+                })).Append(_jumpHeightBonus.Icon.transform.DOScale(1, 0.1f));
             }
             else
             {
-                _jumpHeightCount.text = $"X{count}";
+                _jumpHeightBonus.CountText.text = $"x{count}";
             }
         }
         
@@ -48,14 +57,14 @@ namespace UI.Views
             if (IsOpen)
             {
                 var sequence = DOTween.Sequence();
-                sequence.Append(_jumpToTopCount.transform.DOScale(_downPunchScale, 0.1f).OnComplete(() =>
+                sequence.Append(_jumpToTopBonus.Icon.transform.DOScale(_downPunchScale, 0.1f).OnComplete(() =>
                 {
-                    _jumpToTopCount.text = $"{count}";
-                })).Append(_jumpToTopCount.transform.DOScale(1, 0.1f));
+                    _jumpToTopBonus.CountText.text = $"x{count}";
+                })).Append(_jumpToTopBonus.Icon.transform.DOScale(1, 0.1f));
             }
             else
             {
-                _jumpToTopCount.text = $"X{count}";
+                _jumpToTopBonus.CountText.text = $"x{count}";
             }
         }
         
@@ -77,8 +86,8 @@ namespace UI.Views
         {
             _highlightToTopSeq?.Kill();
             _highlightToTopSeq = DOTween.Sequence();
-            _highlightToTopSeq.Append(_jumpHeightBonus.transform.DOScale(_highlightScale, _highlightPeriod)).SetEase(Ease.Linear)
-                .Append(_jumpHeightBonus.transform.DOScale(1, _highlightPeriod)).SetEase(Ease.Linear)
+            _highlightToTopSeq.Append(_jumpHeightBonus.Icon.transform.DOScale(_highlightScale, _highlightPeriod)).SetEase(Ease.Linear)
+                .Append(_jumpHeightBonus.Icon.transform.DOScale(1, _highlightPeriod)).SetEase(Ease.Linear)
                 .SetLoops(_highlightLoops);
         }
 
@@ -86,8 +95,8 @@ namespace UI.Views
         {
             _highlightJumpHeightSeq?.Kill();
             _highlightJumpHeightSeq = DOTween.Sequence();
-            _highlightJumpHeightSeq.Append(_jumpToTopBonus.transform.DOScale(_highlightScale, _highlightPeriod)).SetEase(Ease.Linear)
-                .Append(_jumpToTopBonus.transform.DOScale(1, _highlightPeriod)).SetEase(Ease.Linear)
+            _highlightJumpHeightSeq.Append(_jumpToTopBonus.Icon.transform.DOScale(_highlightScale, _highlightPeriod)).SetEase(Ease.Linear)
+                .Append(_jumpToTopBonus.Icon.transform.DOScale(1, _highlightPeriod)).SetEase(Ease.Linear)
                 .SetLoops(_highlightLoops);
         }
         

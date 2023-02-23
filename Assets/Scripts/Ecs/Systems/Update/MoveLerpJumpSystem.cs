@@ -45,9 +45,7 @@ namespace Ecs.Systems
                 if (lerpMoveComp.Value >= 1f)
                 {
                     lerpMoveComp.Value = 0f;
-                    ref var height = ref world.GetComponent<CurrentHeightComponent>(entity);
-                    height.Value = lerpMoveComp.EndPosition.y;
-                    ReactDataPool.PlayerHeight.Value = height.Value;
+        
                     world.RemoveComponent<IsMovingComponent>(entity);
                     world.RemoveComponent<LerpMoveComponent>(entity);
                     continue;

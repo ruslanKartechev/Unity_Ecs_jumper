@@ -1,6 +1,8 @@
-﻿using Ecs.Components;
+﻿using System.Collections.Generic;
+using Ecs.Components;
 using Ecs.Components.View;
 using Ecs.Systems;
+using Game;
 using Leopotam.EcsLite;
 using UnityEngine;
 using View;
@@ -13,7 +15,10 @@ namespace Ecs
         {
             var entity = world.NewEntity();
             ref var map = ref world.AddComponentToEntity<MapComponent>(entity);
-            map = new MapComponent();
+            map.AllBlocks = new List<int>();
+            map.AllAboveBlocks = new List<int>();
+
+            world.AddComponentToEntity<TearMatDataComponent>(entity);
             
             ref var cellTops = ref world.AddComponentToEntity<CellTopsComponent>(entity);
             cellTops = new CellTopsComponent();
@@ -47,7 +52,8 @@ namespace Ecs
             world.AddComponentToEntity<BlockSpawnDataComponent>(entity);
             world.AddComponentToEntity<GameStateComponent>(entity);
             world.AddComponentToEntity<TransformVC>(entity);
-            
+            world.AddComponentToEntity<MaxReachedHeightComponent>(entity);
+
             Pool.PlayerEntity = entity;
             return entity;
         }
@@ -72,17 +78,19 @@ namespace Ecs
             world.AddComponentToEntity<LevelIndexComponent>(entity);
             world.AddComponentToEntity<LevelComponent>(entity);
             Pool.LevelEntity = entity;
+            world.AddComponentToEntity<NumbersBlockVC>(entity);
+            ref var passedBlocks = ref world.AddComponentToEntity<PassedHeightsVC>(entity);
+            passedBlocks.Values = new HashSet<float>();
             return entity;
         }
-        
-        
-        
+
         public static int MakeBlockEntity(EcsWorld world, Vector3 position, CellBlockView view, Vector2Int cellPos)
         {
             var entity = world.NewEntity();
             world.AddComponentToEntity<BlockComponent>(entity);
             ref var posComp = ref world.AddComponentToEntity<PositionComponent>(entity);
             posComp.Value = position;
+            world.AddComponentToEntity<RotationComponent>(entity);
 
             ref var cellPosComp = ref world.AddComponentToEntity<CellPositionComponent>(entity);
             cellPosComp.x = cellPos.x;
@@ -102,5 +110,34 @@ namespace Ecs
             
             return entity;
         }
+        
+        public static int MakeBreakableBlock(EcsWorld world, Vector3 position, BreakableBlockView view, Vector2Int cellPos)
+        {
+            var entity = world.NewEntity();
+            world.AddComponentToEntity<BlockComponent>(entity);
+            ref var posComp = ref world.AddComponentToEntity<PositionComponent>(entity);
+            posComp.Value = position;
+            world.AddComponentToEntity<RotationComponent>(entity);
+
+            ref var cellPosComp = ref world.AddComponentToEntity<CellPositionComponent>(entity);
+            cellPosComp.x = cellPos.x;
+            cellPosComp.y = cellPos.y;
+            
+            ref var viewComp = ref world.AddComponentToEntity<TransformVC>(entity);
+            viewComp.Body = view.transform;
+            
+            ref var mainMatComp = ref world.AddComponentToEntity<MainMaterialVC>(entity);
+            mainMatComp.Value = view.MainMaterial;
+            
+            // ref var transparentMatComp = ref world.AddComponentToEntity<TransparentMaterialVC>(entity);
+            // transparentMatComp.Value = view.TransparentMaterial;
+
+            ref var rendererComp = ref world.AddComponentToEntity<RendererVC>(entity);
+            rendererComp.Value = view.Renderer;
+            
+            return entity;
+        }
+        
+        
     }
 }

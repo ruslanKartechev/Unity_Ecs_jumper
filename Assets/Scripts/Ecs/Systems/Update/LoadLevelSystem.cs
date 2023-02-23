@@ -1,5 +1,7 @@
 ﻿using Data;
 using Ecs.Components;
+using Ecs.Components.View;
+using Game;
 using Game.Level.Impl;
 using Leopotam.EcsLite;
 using Services.Instantiate;
@@ -31,6 +33,8 @@ namespace Ecs.Systems
         {
             foreach (var entity in _filter)
             {
+                EntityMaker.MakeLevelEntity(_world);
+
                 ref var component = ref _pool.Get(entity);
                 var prefab = _levelRepository.GetLevel(component.Index);
                 var viewInstance = _instantiateService.Spawn<LevelView>(prefab.gameObject);
@@ -63,7 +67,7 @@ namespace Ecs.Systems
 
                 ref var spawnDelay = ref _world.GetComponent<BlockSpawnDelayComponent>(Pool.PlayerEntity);
                 spawnDelay.Value = viewInstance.spawnDelay;
-                spawnDelay.Tier = 0;
+                spawnDelay.Tier = 1;
                 
                 ref var blocksCount = ref _world.GetComponent<BlocksCountComponent>(Pool.PlayerEntity);
                 blocksCount.Value = 0;
@@ -71,17 +75,25 @@ namespace Ecs.Systems
             
                 ref var blockSpawnDelay = ref _world.GetComponent<BlockSpawnDataComponent>(Pool.PlayerEntity);
                 blockSpawnDelay.Data = viewInstance.spawnDelayData;
-                
+                ResetStats();
                 SetBonuses();
                 ref var gameState = ref _world.GetComponent<GameStateComponent>(Pool.PlayerEntity);
                 gameState.Value = EGameState.StartWindow;
                 _world.AddComponentToNew<SpawnPlayerComponent>();
+
+                ref var colors = ref _world.GetComponent<TearMatDataComponent>(Pool.MapEntity);
+                colors.Data = viewInstance.tearBlockMatData;
                 
+                ref var numbersBlock = ref _world.GetComponent<NumbersBlockVC>(Pool.LevelEntity);
+                numbersBlock.View = viewInstance.NumberBlock;
+
                 _windowsManager.CloseAll();
                 _windowsManager.ShowStart();
             }
         }
 
+        
+        
         private void SetBonuses()
         {
             ref var jumpHeightCount = ref _world.GetComponent<JumpHeightBonusCountComponent>(Pool.PlayerEntity);
@@ -90,6 +102,13 @@ namespace Ecs.Systems
             jumpToTopCount.Value = 2;   
         }
         
+        private void ResetStats()
+        {
+            ReactDataPool.Tier.Value = 1;
+            ReactDataPool.BlocksCount.Value = 0;
+            ReactDataPool.MoveCount.Value = 0;
+            ReactDataPool.PlayerHeight.Value = 0;
+        }
         
     }
 }

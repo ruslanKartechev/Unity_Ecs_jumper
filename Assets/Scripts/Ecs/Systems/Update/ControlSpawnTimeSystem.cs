@@ -28,11 +28,12 @@ namespace Ecs.Systems
                 
                 foreach (var d in data.SpawnData)
                 {
-                    if (value >= d.BlocksCount && delay.Tier < d.Tier)
+                    if (delay.Tier < d.Tier && value >= d.BlocksCount)
                     {
                         delay.Value = d.Delay;
                         delay.Tier = d.Tier;
-                        Dbg.LogBlue($"Tier {d.Tier}, block count: {value}, delayTime: {delay.Value}");
+                        Dbg.LogGreen($"Tier {d.Tier}, block count: {value}, delayTime: {delay.Value}");
+                        ReactDataPool.Tier.Value = d.Tier;
                         break;
                     }
                 }

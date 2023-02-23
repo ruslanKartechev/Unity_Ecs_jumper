@@ -18,14 +18,21 @@ namespace UI.Windows
             _view.UpdatePlayerHeight(0);
             _view.InitControl(OnControlButton);
             ReactDataPool.PlayerHeight.SubOnChange((value) => _view.UpdatePlayerHeight(value) );
+            ReactDataPool.Tier.SubOnChange(OnTierChange);
         }
-        
+
+        private void OnTierChange(int tier)
+        {
+            _view.UpdateTier($"TIER {tier}");
+        }
+
         public void Open(bool animated = true, Action onDone = null)
         {
             if(animated) 
                 _view.ShowView(onDone);
             else
             {
+                _view.UpdateTier($"TIER {ReactDataPool.Tier.Value}");
                 _view.IsOpen = true;
             }
         }

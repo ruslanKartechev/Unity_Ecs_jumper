@@ -15,6 +15,12 @@ namespace Game.Level.Impl
         public SpawnDelayData spawnDelayData;
         public GameObject _pointPrefab;
         public List<Transform> _spawnPoints;
+        public TearBlockMatData tearBlockMatData;
+        [SerializeField] NumbersBlockView _numberBlocks;
+
+        public INumberBlockView NumberBlock => _numberBlocks;
+        
+        
         
         #if UNITY_EDITOR
          public void GenerateGrid()
@@ -44,35 +50,4 @@ namespace Game.Level.Impl
          }
          #endif
     }
-    
-    
-    
-    
-    #if UNITY_EDITOR
-    [CustomEditor(typeof(LevelView))]
-    public class LevelViewEditor : Editor
-    {
-        private LevelView me;
-
-        private void OnEnable()
-        {
-            me = target as LevelView;
-        }
-
-        public override void OnInspectorGUI()
-        {
-            base.OnInspectorGUI();
-            if (GUILayout.Button("Spawn"))
-            {
-                me.GenerateGrid();
-                EditorUtility.SetDirty(me);
-            }
-            if (GUILayout.Button("Clear"))
-            {
-                me.Clear();
-                EditorUtility.SetDirty(me);
-            }
-        }
-    }
-    #endif
 }
